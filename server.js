@@ -14,7 +14,7 @@ const path = './wins.json',
 
 app.use(cors({
   'allowedHeaders': ['Content-Type'],
-  'origin': '*',
+  'origin': 'https://benevolent-crepe-47ae25.netlify.app',
   'methods': 'GET'
 }));
 
