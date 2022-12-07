@@ -86,7 +86,7 @@ app.get('/winner_hashes', (req, res) => {
 //   let wins_arr = JSON.parse(fs.readFileSync(path, 'utf8'));
 
   if ([req.query.address] in wins_)
-    res.json({ result: JSON.stringify(wins_arr[req.query.address]) });
+    res.json({ result: JSON.stringify(wins_[req.query.address]) });
   else
     res.json({ result: [] });
 })
