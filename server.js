@@ -9,7 +9,7 @@ const server = http.Server(app).listen(5000),
   io = socketIo(server),
   clients = {};
 
-const allowed_domain = "https://benevolent-crepe-47ae25.netlify.app";
+const allowed_domain = "https://sage-toffee-de617f.netlify.app";
 
 const path = './wins.json',
   nft_path = './nft_minted.json';
