@@ -24,6 +24,8 @@ var wins_ = {
   ]
 };
 
+var nft_minted = {};
+
 // Ban all requests not from our frontend
 app.use(cors({
   'allowedHeaders': ['Content-Type'],
@@ -42,38 +44,38 @@ app.use('/*', (req, res, next) => {
 
 // Save hashes for winners to show them in profile page
 app.get('/save_tx', (req, res) => {
-  let wins_arr = JSON.parse(fs.readFileSync(path, 'utf8'));
+//   let wins_arr = JSON.parse(fs.readFileSync(path, 'utf8'));
 
-  if ([req.query.address] in wins_arr)
-    wins_arr[req.query.address].push(req.query.txhash);
+  if ([req.query.address] in wins_)
+    wins_[req.query.address].push(req.query.txhash);
   else
-    wins_arr[req.query.address] = [req.query.txhash];
+    wins_[req.query.address] = [req.query.txhash];
 
-  fs.writeFile(path, JSON.stringify(wins_arr, null, 2), (error) => {
-    if (error)
-      res.sendStatus(404);
-  });
+//   fs.writeFile(path, JSON.stringify(wins_arr, null, 2), (error) => {
+//     if (error)
+//       res.sendStatus(404);
+//   });
 
   res.sendStatus(200);
 });
 
 // Save ids for minter nfts by users
 app.get('/save_mint', (req, res) => {
-  let nft_arr = JSON.parse(fs.readFileSync(nft_path, 'utf8'));
+//   let nft_arr = JSON.parse(fs.readFileSync(nft_path, 'utf8'));
 
-  if ([req.query.address] in nft_arr)
-    nft_arr[req.query.address] = {
+  if ([req.query.address] in nft_minted)
+    nft_minted[req.query.address] = {
       [req.query.wins_count]: req.query.token_id
     };
   else
-    nft_arr[req.query.address] = {
+    nft_minted[req.query.address] = {
       [req.query.wins_count]: req.query.token_id
     };
 
-  fs.writeFile(nft_path, JSON.stringify(nft_arr, null, 2), (error) => {
-    if (error)
-      res.sendStatus(404);
-  });
+//   fs.writeFile(nft_path, JSON.stringify(nft_arr, null, 2), (error) => {
+//     if (error)
+//       res.sendStatus(404);
+//   });
 
   res.sendStatus(200);
 });
@@ -91,10 +93,10 @@ app.get('/winner_hashes', (req, res) => {
 
 // Show minter nfts ids
 app.get('/minted', (req, res) => {
-  let minted = JSON.parse(fs.readFileSync(nft_path, 'utf8'));
+//   let minted = JSON.parse(fs.readFileSync(nft_path, 'utf8'));
 
-  if ([req.query.address] in minted)
-    res.json({ result: JSON.stringify(minted[req.query.address]) });
+  if ([req.query.address] in nft_minted)
+    res.json({ result: JSON.stringify(nft_minted[req.query.address]) });
   else
     res.json({ result: [] });
 })
