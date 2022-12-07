@@ -9,14 +9,26 @@ const server = http.Server(app).listen(5000),
   io = socketIo(server),
   clients = {};
 
+const allowed_domain = "http://localhost:3000";
+
 const path = './wins.json',
   nft_path = './nft_minted.json';
 
+// Ban all requests not from our frontend
 app.use(cors({
   'allowedHeaders': ['Content-Type'],
-  'origin': 'https://benevolent-crepe-47ae25.netlify.app',
+  'origin': allowed_domain,
   'methods': 'GET'
 }));
+
+
+// Ban requests from browser too
+app.use('/*', (req, res, next) => {
+  if (req.get('origin') === allowed_domain)
+    next();
+  else
+    res.sendStatus(404);
+});
 
 // Save hashes for winners to show them in profile page
 app.get('/save_tx', (req, res) => {
@@ -41,11 +53,11 @@ app.get('/save_mint', (req, res) => {
 
   if ([req.query.address] in nft_arr)
     nft_arr[req.query.address] = {
-      [req.query.wins_count]:req.query.token_id
+      [req.query.wins_count]: req.query.token_id
     };
   else
     nft_arr[req.query.address] = {
-      [req.query.wins_count]:req.query.token_id
+      [req.query.wins_count]: req.query.token_id
     };
 
   fs.writeFile(nft_path, JSON.stringify(nft_arr, null, 2), (error) => {
@@ -58,12 +70,13 @@ app.get('/save_mint', (req, res) => {
 
 // Show wins hashes by user wallet address
 app.get('/winner_hashes', (req, res) => {
+
   let wins_arr = JSON.parse(fs.readFileSync(path, 'utf8'));
 
   if ([req.query.address] in wins_arr)
     res.json({ result: JSON.stringify(wins_arr[req.query.address]) });
   else
-  res.json({ result: [] });
+    res.json({ result: [] });
 })
 
 // Show minter nfts ids
