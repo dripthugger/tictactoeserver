@@ -11,8 +11,18 @@ const server = http.Server(app).listen(5000),
 
 const allowed_domain = "https://sage-toffee-de617f.netlify.app";
 
-const path = './wins.json',
-  nft_path = './nft_minted.json';
+// const path = './wins.json',
+//   nft_path = './nft_minted.json';
+
+var wins_ = {
+  "0xb8787f69a2bce03ee2837f6d75c4bafb9fd366b0": [
+    "0x1433d6bd7dfde1c8278cc9ab0186358c3face8750e439c27fbd2b4970c2e9df5",
+    "0xe8378b664fe0813e40e27e8c974f249e207299f3a579f81651095fc55748cb8a",
+    "0x02f0cdda9506b34036ad1780a6bcc6a359d2f58e165a53877086c4042fcfcad3",
+    "0x95336383b7502ab4771a695b3c450bf8390e9c395338cc326b678550fd4c5f20",
+    "0x38687cd0fd5ed97d0911c4eb191ac9bdc7a90105a9e4b8ac0510fe86b3a5b05b"
+  ]
+};
 
 // Ban all requests not from our frontend
 app.use(cors({
@@ -71,9 +81,9 @@ app.get('/save_mint', (req, res) => {
 // Show wins hashes by user wallet address
 app.get('/winner_hashes', (req, res) => {
 
-  let wins_arr = JSON.parse(fs.readFileSync(path, 'utf8'));
+//   let wins_arr = JSON.parse(fs.readFileSync(path, 'utf8'));
 
-  if ([req.query.address] in wins_arr)
+  if ([req.query.address] in wins_)
     res.json({ result: JSON.stringify(wins_arr[req.query.address]) });
   else
     res.json({ result: [] });
